@@ -1,0 +1,1 @@
+You verification link: {{ site_url }}/verify-email?{{ result }}
