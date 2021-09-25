@@ -1,0 +1,188 @@
+<app-loading *ngIf="loading"></app-loading>
+<div class="row" *ngIf="!loading">
+  <div class="col-xl-10 offset-xl-1">
+    <div class="vendor-info">
+      <app-alerts></app-alerts>
+      <button (click)="logout()" class="btn btn-dark float-right">Log out</button>
+      <div class="row">
+        <div class="col">
+          <h3 class="text-capitalize text-center">
+            Vendor dashboard
+          </h3>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-5 offset-md-1">
+          <div class="list-group">
+            <div class="list-group-item">
+              <p class="text-center">Organization details</p>
+            </div>
+            <div class="list-group-item">
+              <span class="text-secondary">Organization Name:</span> {{vendor.organization !== null ?
+              vendor.organization.name : "Not created"}}
+            </div>
+            <div class="list-group-item">
+              <span class="text-secondary">Email Id:</span> {{vendor.email}}
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 dashboard-control">
+          <p>
+            Application Progress
+          </p>
+          <div class="progress">
+            <div class="progress-bar bg-success" role="progressbar" style="width: 25%" aria-valuenow="25"
+                 aria-valuemin="0"
+                 aria-valuemax="100"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row control-buttons justify-content-center">
+      <div class="col-md-4 text-center">
+        <button class="btn btn-outline-primary" routerLink="/campaigns/create" [disabled]="disabled">
+          CREATE CAMPAIGN
+        </button>
+      </div>
+      <div class="col-md-4 text-center">
+        <button class="btn btn-outline-primary" routerLink="/coupons/create" [disabled]="disabled">
+          CREATE COUPON
+        </button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <div class="list-group">
+          <div class="list-group-item">
+            <div class="row">
+              <div class="col-md-3 offset-md-2 text-center dashboard-control">
+                Organization
+              </div>
+              <div class="col-md-3 text-center dashboard-control">
+                <div *ngIf="vendor.organization !== null">
+                  <div *ngIf="!vendor.organization.verified" class="badge badge-danger">NOT VERIFIED</div>
+                  <div *ngIf="vendor.organization.verified" class="badge badge-success">VERIFIED</div>
+                </div>
+                <div *ngIf="vendor.organization === null" class="badge badge-warning">NOT CREATED</div>
+              </div>
+              <div class="col-md-3 text-center dashboard-control">
+                <button routerLink="/organization" class="btn btn-primary" [disabled]="!vendor.verified">
+                  Manage
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="list-group-item">
+          <div class="row">
+            <div class="col-md-3 offset-md-2 text-center dashboard-control">
+              Outlets
+            </div>
+            <div class="col-md-3 text-center dashboard-control">
+              <span
+                class="badge badge-primary badge-pill">{{ vendor.outlets.length }}</span>
+            </div>
+            <div class="col-md-3 text-center">
+              <button routerLink="/outlets/list" class="btn btn-primary dashboard-control" [disabled]="disabled">
+                Manage
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="list-group-item">
+          <div class="row">
+            <div class="col-md-3 offset-md-2 text-center dashboard-control">
+              Inactive campaigns
+            </div>
+            <div class="col-md-3 text-center dashboard-control">
+              <span
+                class="badge badge-primary badge-pill">{{(vendor.campaigns|filterCampaigns:"inactive").length}}</span>
+            </div>
+            <div class="col-md-3 text-center">
+              <button routerLink="/campaigns/list/inactive" class="btn btn-primary dashboard-control"
+                      [disabled]="disabled">
+                Manage
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="list-group-item">
+          <div class="row">
+            <div class="col-md-3 offset-md-2 text-center dashboard-control">
+              Active campaigns
+            </div>
+            <div class="col-md-3 text-center dashboard-control">
+                <span
+                  class="badge badge-primary badge-pill">{{(vendor.campaigns|filterCampaigns:"active").length}}</span>
+            </div>
+            <div class="col-md-3 text-center dashboard-control">
+              <button routerLink="/campaigns/list/active" class="btn btn-primary" [disabled]="disabled">
+                Manage
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="list-group-item">
+          <div class="row">
+            <div class="col-md-3 offset-md-2 text-center dashboard-control">
+              Used campaigns
+            </div>
+            <div class="col-md-3 text-center dashboard-control">
+              <span class="badge badge-primary badge-pill">{{(vendor.campaigns|filterCampaigns:"used").length}}</span>
+            </div>
+            <div class="col-md-3 text-center dashboard-control">
+              <button routerLink="/campaigns/list/used" class="btn btn-primary" [disabled]="disabled">
+                Manage
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="list-group-item">
+          <div class="row">
+            <div class="col-md-3 offset-md-2 text-center dashboard-control">
+              Active coupons
+            </div>
+            <div class="col-md-3 text-center dashboard-control">
+              <span class="badge badge-primary badge-pill">{{(vendor.coupons|filterCampaigns:"active").length}}</span>
+            </div>
+            <div class="col-md-3 text-center dashboard-control">
+              <button routerLink="/coupons/list/active" class="btn btn-primary" [disabled]="disabled">
+                Manage
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="list-group-item">
+          <div class="row">
+            <div class="col-md-3 offset-md-2 text-center dashboard-control">
+              Inactive coupons
+            </div>
+            <div class="col-md-3 text-center dashboard-control">
+              <span class="badge badge-primary badge-pill">{{(vendor.coupons|filterCampaigns:"inactive").length}}</span>
+            </div>
+            <div class="col-md-3 text-center dashboard-control">
+              <button routerLink="/coupons/list/inactive" class="btn btn-primary" [disabled]="disabled">
+                Manage
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="list-group-item">
+          <div class="row">
+            <div class="col-md-3 offset-md-2 text-center dashboard-control">
+              Used coupons
+            </div>
+            <div class="col-md-3 text-center dashboard-control">
+              <span class="badge badge-primary badge-pill">{{(vendor.coupons|filterCampaigns:"used").length}}</span>
+            </div>
+            <div class="col-md-3 text-center dashboard-control">
+              <button routerLink="/coupons/list/used" class="btn btn-primary" [disabled]="disabled">
+                Manage
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

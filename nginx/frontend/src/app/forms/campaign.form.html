@@ -1,0 +1,74 @@
+<app-loading *ngIf="loading"></app-loading>
+<div class="row" *ngIf="!loading">
+  <app-back></app-back>
+  <div class="card col-md-6 offset-md-3">
+    <div class="card-title">
+      <h3>Campaign details</h3>
+      <small class="text-secondary">
+        Enter your campaign details here
+      </small>
+    </div>
+    <div class="card-body">
+      <form (submit)="save()" #campaignForm="ngForm">
+        <app-alerts></app-alerts>
+        <div class="form-group">
+          <label for="name">Campaign name</label>
+          <input [(ngModel)]="name" type="text" class="form-control" name="name" id="name" required="required"
+                 #nameField="ngModel">
+          <div class="col-12" *ngIf="nameField.invalid && (nameField.touched || nameField.dirty)">
+            <div class="form-text text-danger">
+              Please, enter campaign name
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="start">Start</label>
+          <input [(ngModel)]="start" id="start" name="start" class="form-control"
+                 [owlDateTimeTrigger]="dtPicker1" [owlDateTime]="dtPicker1" required="required" #startField="ngModel">
+          <owl-date-time [pickerMode]="'dialog'" #dtPicker1></owl-date-time>
+          <small class="form-text text-muted">Click or press alt + ↓</small>
+          <div class="col-12" *ngIf="startField.invalid && (startField.touched || startField.dirty)">
+            <div class="form-text text-danger">
+              Please, enter valid start date
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="end">End</label>
+          <input [(ngModel)]="end" id="end" name="end" class="form-control"
+                 [owlDateTimeTrigger]="dtPicker2" [owlDateTime]="dtPicker2" required="required" #endField="ngModel">
+          <owl-date-time [pickerMode]="'dialog'" #dtPicker2></owl-date-time>
+          <small class="form-text text-muted">Click or press alt + ↓</small>
+          <div class="col-12" *ngIf="endField.invalid && (endField.touched || endField.dirty)">
+            <div class="form-text text-danger">
+              Please, enter valid end date
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="custom-control custom-checkbox">
+            <input [(ngModel)]="active" type="checkbox" class="custom-control-input" id="active" name="active">
+            <label class="custom-control-label" for="active">Active</label>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="row justify-content-center">
+            <div class="col-md-4 text-center">
+              <button class="btn btn-white" routerLink="/campaigns/list/all">Cancel</button>
+            </div>
+            <div class="col-md-4 text-center">
+              <button class="btn btn-primary" [disabled]="campaignForm.form.invalid || !verified" type="submit">Save
+              </button>
+            </div>
+          </div>
+          <div class="form-text text-muted" *ngIf="campaignForm.form.invalid">
+            Some of the fields are incorrect. Please, correct errors to proceed.
+          </div>
+          <div class="form-text text-muted" *ngIf="!verified">
+            Your organization is not verified.
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

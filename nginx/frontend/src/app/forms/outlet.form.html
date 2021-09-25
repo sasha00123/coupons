@@ -1,0 +1,87 @@
+<app-loading *ngIf="loading"></app-loading>
+<div class="row" *ngIf="!loading">
+  <app-back></app-back>
+  <div class="card col-md-6 offset-md-3">
+    <div class="card-title">
+      <h3>Outlet</h3>
+      <small class="text-secondary">
+        Enter your outlet details here
+      </small>
+    </div>
+    <div class="card-body">
+      <form (submit)="save()" #outletForm="ngForm">
+        <app-alerts></app-alerts>
+        <div class="form-group">
+          <label for="name">Outlet name</label>
+          <input [(ngModel)]="name" type="text" class="form-control" name="name" id="name" required="required"
+                 #nameField="ngModel">
+          <div class="col-12" *ngIf="nameField.invalid && (nameField.touched || nameField.dirty)">
+            <div class="form-text text-danger">
+              Please, enter outlet name
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="description" class="control-label">
+            Description
+          </label>
+          <textarea [(ngModel)]="description" name="description" id="description" class="form-control"
+                    required="required" #descriptionField="ngModel"></textarea>
+          <div class="col-12" *ngIf="descriptionField.invalid && (descriptionField.touched || descriptionField.dirty)">
+            <div class="form-text text-danger">
+              Please, enter outlet description
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="address">Address</label>
+          <input [(ngModel)]="address" type="text" class="form-control" name="address" id="address" required="required"
+                 #addressField="ngModel">
+          <div class="col-12" *ngIf="addressField.invalid && (addressField.touched || addressField.dirty)">
+            <div class="form-text text-danger">
+              Please, enter outlet address
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="latitude">Latitude</label>
+          <input [(ngModel)]="latitude" type="text" class="form-control" name="latitude" id="latitude"
+                 required="required" #latitudeField="ngModel">
+
+          <div class="col-12" *ngIf="latitudeField.invalid && (latitudeField.touched || latitudeField.dirty)">
+            <div class="form-text text-danger">
+              Please, enter valid latitude
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="longitude">Longitude</label>
+          <input [(ngModel)]="longitude" type="text" class="form-control" name="longitude" id="longitude"
+                 required="required" #longitudeField="ngModel">
+          <div class="col-12" *ngIf="longitudeField.invalid && (longitudeField.touched || longitudeField.dirty)">
+            <div class="form-text text-danger">
+              Please, enter valid longitude
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="row justify-content-center">
+            <div class="col-md-4 text-center">
+              <button routerLink="/outlets/list" class="btn btn-white" type="submit">Cancel</button>
+            </div>
+            <div class="col-md-4 text-center">
+              <button class="btn btn-primary" [disabled]="outletForm.form.invalid || !verified" type="submit">Save
+              </button>
+            </div>
+          </div>
+          <div class="form-text text-muted" *ngIf="outletForm.form.invalid">
+            Some of the fields are incorrect. Please, correct errors to proceed.
+          </div>
+          <div class="form-text text-muted" *ngIf="!verified">
+            Your organization is not verified.
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

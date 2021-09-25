@@ -1,0 +1,307 @@
+<app-loading *ngIf="loading"></app-loading>
+<div class="row" *ngIf="!loading">
+  <app-back></app-back>
+  <div class="card col-md-6 offset-md-3">
+    <div class="card-title">
+      <h3>Coupon details</h3>
+      <small class="text-secondary">
+        Enter your coupon details here
+      </small>
+    </div>
+    <div class="card-body">
+      <form (submit)="submit()" #couponForm="ngForm">
+        <app-alerts></app-alerts>
+        <div class="form-group">
+          <label class="control-label" for="name">
+            Name
+          </label>
+          <input type="text" [(ngModel)]="name" id="name" name="name" class="form-control" required="required"
+                 #nameField="ngModel">
+          <div class="col-12" *ngIf="nameField.invalid && (nameField.touched || nameField.dirty)">
+            <div class="form-text text-danger">
+              Please, enter coupon name
+            </div>
+          </div>
+        </div>
+        <hr>
+        <div class="form-group">
+          <label for="description" class="control-label">
+            Description
+          </label>
+          <textarea [(ngModel)]="description" name="description" id="description" class="form-control"
+                    required="required" #descriptionField="ngModel"></textarea>
+          <div class="col-12" *ngIf="descriptionField.invalid && (descriptionField.touched || descriptionField.dirty)">
+            <div class="form-text text-danger">
+              Please, enter coupon description
+            </div>
+          </div>
+        </div>
+        <hr>
+        <div class="form-group">
+          <label for="TC" class="control-label">
+            Terms & Conditions
+          </label>
+          <textarea [(ngModel)]="TC" name="TC" id="TC" class="form-control" required="required"
+                    #TCField="ngModel"></textarea>
+          <div class="col-12" *ngIf="TCField.invalid && (TCField.touched || TCField.dirty)">
+            <div class="form-text text-danger">
+              Please, enter coupon TC
+            </div>
+          </div>
+        </div>
+        <hr>
+        <div class="form-group">
+          <label class="control-label">
+            Type
+          </label>
+          <ng-select [items]="types$ | async"
+                     bindValue="id"
+                     bindLabel="name"
+                     [(ngModel)]="selected.type" name="type"
+                     required="required">
+          </ng-select>
+        </div>
+        <div class="form-group" [ngSwitch]="selected.type">
+          <div *ngSwitchCase="1">
+            <label class="control-label text-secondary">Sale</label>
+            <div class="input-group">
+              <input type="number" [(ngModel)]="dealFields.sale" class="form-control" name="sale" required="required">
+              <div class="input-group-append text-secondary">
+                <span class="input-group-text">%</span>
+              </div>
+            </div>
+          </div>
+          <div *ngSwitchCase="2">
+            <label class="control-label text-secondary" for="buy">Buy</label>
+            <input [(ngModel)]="dealFields.buy" type="number" class="form-control" required="required" name="buy"
+                   id="buy" #buyField="ngModel">
+            <div class="col-12" *ngIf="buyField.invalid && (buyField.touched || buyField.dirty)">
+              <div class="form-text text-danger">
+                Please, enter valid amount
+              </div>
+            </div>
+            <label class="control-label text-secondary" for="next">Next</label>
+            <input [(ngModel)]="dealFields.next" type="text" class="form-control" name="next" id="next"
+                   #nextField="ngModel" required="required">
+            <div class="col-12" *ngIf="nextField.invalid && (nextField.touched || nextField.dirty)">
+              <div class="form-text text-danger">
+                Please, enter valid amount
+              </div>
+            </div>
+          </div>
+          <div *ngSwitchCase="3">
+            <label class="control-label text-secondary" for="amount">Amount</label>
+            <input [(ngModel)]="dealFields.amount" type="number" class="form-control" required="required" name="amount"
+                   id="amount" #amountField="ngModel">
+            <div class="col-12" *ngIf="amountField.invalid && (amountField.touched || amountField.dirty)">
+              <div class="form-text text-danger">
+                Please, enter valid amount
+              </div>
+            </div>
+            <label class="control-label text-secondary" for="cost">For</label>
+            <input [(ngModel)]="dealFields.cost" type="text" class="form-control" required="required" name="cost"
+                   id="cost" #costField="ngModel">
+            <div class="col-12" *ngIf="costField.invalid && (costField.touched || costField.dirty)">
+              <div class="form-text text-danger">
+                Please, enter valid amount
+              </div>
+            </div>
+            <label class="control-label text-secondary" for="save">Save</label>
+            <input [(ngModel)]="dealFields.save" type="text" class="form-control" required="required" name="save"
+                   id="save" #saveField="ngModel">
+            <div class="col-12" *ngIf="saveField.invalid && (saveField.touched || saveField.dirty)">
+              <div class="form-text text-danger">
+                Please, enter valid amount
+              </div>
+            </div>
+          </div>
+        </div>
+        <hr>
+        <div class="form-group">
+          <label class="control-label">
+            Category
+          </label>
+          <ng-select [items]="categories$ | async"
+                     bindValue="id"
+                     bindLabel="name"
+                     [(ngModel)]="selected.category" name="category"
+                     required="required">
+          </ng-select>
+        </div>
+        <hr>
+        <div class="form-group">
+          <label class="control-label">
+            Campaign
+          </label>
+          <ng-select [items]="campaigns"
+                     bindValue="id"
+                     bindLabel="name"
+                     [(ngModel)]="selected.campaign" name="campaign"
+                     required="required">
+          </ng-select>
+        </div>
+        <hr>
+        <div class="form-group">
+          <label class="control-label">
+            Outlet
+          </label>
+          <ng-select [items]="outlets"
+                     bindValue="id"
+                     bindLabel="name"
+                     [(ngModel)]="selected.outlets" [multiple]="true" name="outlets"
+                     required="required">
+            <ng-template ng-header-tmp>
+              <div (click)="selectAll()" class="btn btn-sm btn-secondary">Select all</div>
+              <div (click)="unselectAll()" class="btn btn-sm btn-secondary">Unselect all</div>
+            </ng-template>
+          </ng-select>
+        </div>
+        <hr>
+        <div class="form-group">
+          <label class="control-label">
+            Interest
+          </label>
+          <ng-select [items]="interests$ | async"
+                     bindLabel="name"
+                     bindValue="id"
+                     [(ngModel)]="selected.interests"
+                     [multiple]="true" name="interests"
+                     required="required">
+          </ng-select>
+        </div>
+        <hr>
+        <div class="form-group">
+          <img *ngIf="editing" [src]="imageurl" style="max-width: 100%">
+        </div>
+        <div class="form-group">
+          <label for="image">Image</label>
+          <div class="custom-file">
+            <input type="file" accept="image/*" id="image" name="image"
+                   (change)="handleFileInput($event.target.files)">
+          </div>
+          <div class="form-text text-warning">
+            Max size - 1MB
+          </div>
+          <div class="col-12" *ngIf="!imageIsValid">
+            <div class="form-text text-muted">
+              Please, attach valid image
+            </div>
+          </div>
+        </div>
+        <hr>
+        <div class="form-group">
+          <label class="control-label" for="number">
+            Amount
+          </label>
+          <div class="input-group">
+            <div class="custom-control custom-checkbox">
+              <input type="checkbox" [(ngModel)]="infinite" name="infinite" class="custom-control-input"
+                     id="infinite">
+              <label class="custom-control-label" for="infinite">Infinite</label>
+            </div>
+          </div>
+          <div class="input-group" *ngIf="!infinite">
+            <input [(ngModel)]="amount" type="number" name="number" class="form-control" id="number"
+                   required="required" #numberField="ngModel">
+            <div class="col-12" *ngIf="numberField.invalid && (numberField.touched || numberField.dirty)">
+              <div class="form-text text-danger">
+                Please, enter valid amount
+              </div>
+            </div>
+          </div>
+        </div>
+        <hr>
+        <div class="form-group">
+          <label class="control-label" for="code">
+            Code
+          </label>
+          <div class="input-group">
+            <input [(ngModel)]="code" type="text" name="code" class="form-control" required="required" id="code"
+                   #codeField="ngModel">
+            <div class="input-group-append">
+              <a (click)="generateCode()" class="btn btn-outline-success">
+                Generate
+              </a>
+            </div>
+            <div class="col-12" *ngIf="codeField.invalid && (codeField.touched || codeField.dirty)">
+              <div class="form-text text-danger">
+                Please, enter valid code
+              </div>
+            </div>
+          </div>
+        </div>
+        <hr>
+        <div class="form-group" id="start">
+          <label class="control-label" for="startField">
+            Start
+          </label>
+          <span class="input-group-addon" style="">
+                                <i class="fa fa-calendar"></i>
+                            </span>
+          <input type="text" [(ngModel)]="start" name="start" class="form-control"
+                 [owlDateTimeTrigger]="dtPicker1" [owlDateTime]="dtPicker1" required="required" #startField="ngModel"
+                 id="startField">
+          <owl-date-time [pickerMode]="'dialog'" #dtPicker1></owl-date-time>
+          <small class="form-text text-muted">Click or press alt + ↓</small>
+          <div class="col-12" *ngIf="startField.invalid && (startField.touched || startField.dirty)">
+            <div class="form-text text-danger">
+              Please, enter valid start date
+            </div>
+          </div>
+        </div>
+        <hr>
+        <div class="form-group" id="end">
+          <label class="control-label" for="endField">End</label>
+          <span class="input-group-addon" style="">
+                                <i class="fa fa-calendar"></i>
+                            </span>
+          <input type="text" [(ngModel)]="end" name="end" class="form-control"
+                 [owlDateTimeTrigger]="dtPicker2" [owlDateTime]="dtPicker2" required="required" id="endField"
+                 #endField="ngModel">
+          <owl-date-time [pickerMode]="'dialog'" #dtPicker2></owl-date-time>
+          <small class="form-text text-muted">Click or press alt + ↓</small>
+          <div class="col-12" *ngIf="endField.invalid && (endField.touched || endField.dirty)">
+            <div class="form-text text-danger">
+              Please, enter valid end date
+            </div>
+          </div>
+        </div>
+        <hr>
+        <div class="form-group">
+          <div class="custom-control custom-checkbox">
+            <input type="checkbox" [(ngModel)]="advertisement" name="advertisement" class="custom-control-input"
+                   id="advertisement">
+            <label class="custom-control-label" for="advertisement">Advertisement</label>
+          </div>
+          <div class="custom-control custom-checkbox">
+            <input type="checkbox" [(ngModel)]="published" name="published" class="custom-control-input" id="published">
+            <label class="custom-control-label" for="published">Published</label>
+          </div>
+          <div class="custom-control custom-checkbox">
+            <input type="checkbox" [(ngModel)]="active" name="active" class="custom-control-input" id="active">
+            <label class="custom-control-label" for="active">Active</label>
+          </div>
+        </div>
+        <hr>
+        <div class="form-group">
+          <div class="row justify-content-center">
+            <div class="col-md-4 text-center">
+              <button class="btn btn-white" routerLink="/coupons/list/all">Cancel</button>
+            </div>
+            <div class="col-md-4 text-center">
+              <button class="btn btn-primary" [disabled]="couponForm.form.invalid || !verified || !imageIsValid"
+                      type="submit">Save
+              </button>
+            </div>
+          </div>
+          <div class="form-text text-muted" *ngIf="couponForm.form.invalid || !imageIsValid">
+            Some of the fields are incorrect. Please, correct errors to proceed.
+          </div>
+          <div class="form-text text-muted" *ngIf="!verified">
+            Your organization is not verified.
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

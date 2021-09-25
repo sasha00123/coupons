@@ -1,0 +1,5 @@
+/* You can add global styles to this file, and also import other style files */
+@import '~bootstrap/dist/css/bootstrap.min.css';
+@import "~open-iconic/font/css/open-iconic-bootstrap.css";
+@import "~ng-pick-datetime/assets/style/picker.min.css";
+@import "~@ng-select/ng-select/themes/default.theme.css";

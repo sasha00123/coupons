@@ -1,0 +1,1001 @@
+openapi: 3.0.0
+info:
+  title: Coupons API
+  version: 1.0.0
+servers:
+  - url: http://localhost:8000/api
+paths:
+  /accounts/create:
+    post:
+      tags:
+        - Account Info
+      summary: Creates new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User' 
+          
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: OK
+        '400':
+          description: Something went wrong.
+  /accounts/info:
+    get:
+      tags:
+        - Account Info
+      summary: Current user info
+      security:
+        - APIKeyHeader: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: OK
+        '401':
+          description: Not authorized
+    patch:
+      tags:
+        - Account Info
+      summary: Update current user info. Warning! If you change username, token will be dropped.
+      security:
+        - APIKeyHeader: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  username:
+                    type: string
+          description: OK
+        '401':
+          description: Not authorized      
+  /accounts/consumer:
+    get:
+      tags:
+        - Account Info
+      summary: Current consumer profile
+      security:
+        - APIKeyHeader: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Consumer'
+          description: OK
+        '401':
+          description: Not authorized
+  /accounts/vendor:
+    get:
+      tags:
+        - Account Info
+      summary: Current vendor profile
+      security: 
+        - APIKeyHeader: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Vendor'
+          description: OK
+        401:
+          description: Not authorized
+  /accounts/send-pin:
+    post:
+      tags:
+        - Account Info
+      summary: Sends new password to consumer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+      responses:
+        '200':
+          description: PIN was sent!
+          content:
+            application/json:
+              schema:
+                type: string
+                example: PIN was sent!
+        '400':
+          description: Something went wrong. (Perhaps user is Vendor)
+          content:
+            application/json:
+              schema:
+                type: string
+                example: Cannot send PIN to a vendor!
+  
+  /accounts/send-verification-email:
+    get:
+      tags:
+        - Account Info
+      summary: Sends verification link to vendor
+      security:
+        - APIKeyHeader: []
+      responses:
+        '200':
+          description: Link sent
+          content:
+            application/json:
+              schema:
+                type: string
+                example: OK
+        '403':
+          description: Something went wrong. (Perhaps user is Consumer)
+          content:
+            application/json:
+              schema:
+                type: string
+                example: Cannot send link to a consumer!
+  /admin/grant:
+    post:
+      tags:
+        - Admin
+      summary: Allows to grant admin privileges to user
+      security:
+        - APIKeyHeader: [admin]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                state:
+                  type: boolean
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: string
+                example: OK
+  /admin/verify:
+    post:
+      tags:
+        - Admin
+      summary: Allows to verify an organization
+      security:
+        - APIKeyHeader: [admin]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                state:
+                  type: boolean
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: string
+                example: OK
+  
+  /admin/restrict:
+    post:
+      tags:
+        - Admin
+      summary: Allows to restrict vendor from publishing
+      security:
+        - APIKeyHeader: [admin]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                state:
+                  type: boolean
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: string
+                example: OK
+  /accounts/token/get:
+    post:
+      tags:
+        - Tokens
+      summary: Generates api token with provided creadentials
+      requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - username
+                  - password
+                properties:
+                  username:
+                    type: string
+                  password:
+                    type: string
+                    format: password
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+          description: Ok
+  /accounts/token/refresh:
+    post:
+      tags:
+        - Tokens
+      summary: Refreshes token by old non-expired token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+  /accounts/token/verify:
+    post:
+      tags:
+        - Tokens
+      summary: Returnsf token is non-expired
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+  /organizations:
+    get:
+      tags:
+        - Organizations
+      summary: List all organizations
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Organization'
+    post:
+      tags:
+        - Organizations
+      summary: Create an organization
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Organization'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organization'
+        '400':
+          description: Wrong request
+        '401':
+          description: Not authorized
+  /organizations/{id}:
+    parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+    get:
+      tags:
+        - Organizations
+      summary: Retrieve organization info
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organization'
+        '401':
+          description: Not authorized
+    patch:
+      tags:
+        - Organizations
+      summary: Update organization info
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Organization'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organization'
+        '401':
+          description: Not authorized
+  /campaigns:
+    get:
+      tags:
+        - Campaigns
+      summary: List all campaigns
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Campaign'
+    post:
+      tags:
+        - Campaigns
+      summary: Create a campaign
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Campaign'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Campaign'
+    
+  /campaigns/{id}:
+    parameters:
+      - name: id
+        in: path
+        schema:
+          type: integer
+        required: true
+    get:
+      tags:
+        - Campaigns
+      summary: Retrieve campaign details
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Campaign'
+    patch:
+      tags:
+        - Campaigns
+      summary: Update campaign details
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Campaign'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Campaign'
+    delete:
+      tags:
+        - Campaigns
+      summary: Delete campaign
+      responses:
+        '200':
+          description: OK
+  /outlets:
+    get:
+      tags:
+        - Outlets
+      summary: List all outlets
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Outlet'
+    post:
+      tags:
+        - Outlets
+      summary: Create a outlet
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Outlet'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Outlet'
+  
+  /outlets/{id}:
+    parameters:
+      - name: id
+        in: path
+        schema:
+          type: integer
+        required: true
+    get:
+      tags:
+        - Outlets
+      summary: Retrieve outlet details
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Outlet'
+    patch:
+      tags:
+        - Outlets
+      summary: Update outlet details
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Outlet'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Outlet'
+    delete:
+      tags:
+        - Outlets
+      summary: Delete outlet
+      responses:
+        '200':
+          description: OK  
+  /coupons:
+    get:
+      tags:
+        - Coupons
+      summary: List all coupons
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Coupon2'
+    post:
+      tags:
+        - Coupons
+      summary: Create a coupon
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Coupon'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Coupon'
+  
+  /coupons/{id}:
+    parameters:
+      - name: id
+        in: path
+        schema:
+          type: integer
+        required: true
+    get:
+      tags:
+        - Coupons
+      summary: Retrieve coupon details
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Coupon2'
+    patch:
+      tags:
+        - Coupons
+      summary: Update coupon details
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Coupon'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Coupon'
+    delete:
+      tags:
+        - Coupons
+      summary: Delete coupon
+      responses:
+        '200':
+          description: OK
+  /types:
+    get:
+      tags:
+        - Meta
+      summary: List all types
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Type'
+  /types/{id}:
+    parameters:
+      - name: id
+        in: path
+        schema:
+          type: integer
+        required: true
+    get:
+      tags:
+        - Meta
+      summary: Retrieve type details
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Type'
+  /categories:
+    get:
+      tags:
+        - Meta
+      summary: List all categories
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Category'
+  /categories/{id}:
+    parameters:
+      - name: id
+        in: path
+        schema:
+          type: integer
+        required: true
+    get:
+      tags:
+        - Meta
+      summary: Retrieve category details
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Category'
+  /interests:
+    get:
+      tags:
+        - Meta
+      summary: List all interests
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Interest'
+  /interests/{id}:
+    parameters:
+      - name: id
+        in: path
+        schema:
+          type: integer
+        required: true
+    get:
+      tags:
+        - Meta
+      summary: Retrieve interest details
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Interest'
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+  schemas:
+    User:
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        username:
+          type: string
+        password:
+          description: Required for vendor
+          type: string
+          writeOnly: true
+          format: password
+        email:
+          type: string
+          format: email
+        atype:
+          type: string
+          enum: [C, V]
+      required:
+        - username
+        - email
+        - atype
+    Consumer:
+      properties:
+        birth_date:
+          type: string
+          format: date
+        full_name:
+          type: string
+        coupons_rated:
+          type: array
+          items:
+            type: integer
+        coupons_short_listed:
+          type: array
+          items:
+            type: integer
+        coupons_used:
+          type: array
+          items:
+            type: integer
+    Vendor:
+      properties:
+        verified:
+          type: boolean
+          readOnly: true
+        organizations:
+          type: array
+          items:
+            type: integer
+          readOnly: true
+        coupons:
+          type: array
+          items:
+            type: object
+            $ref: '#/components/schemas/Coupon'
+          readOnly: true
+        campaigns:
+          type: array
+          items:
+            type: object
+            $ref: '#/components/schemas/Campaign'
+          readOnly: true
+        outlets:
+          type: array
+          items:
+            type: object
+            $ref: '#/components/schemas/Outlet'
+          readOnly: true
+          
+    Organization:
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        vendor:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+        address:
+          type: string
+          format: address
+        verified:
+          type: boolean
+          readOnly: true
+        campaigns:
+          type: array
+          items:
+            type: integer
+          readOnly: true
+        outlets:
+          type: array
+          items:
+            type: integer
+          readOnly: true
+      required:
+        - name
+        - address
+    Campaign:
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        organization:
+          type: integer
+        name:
+          type: string
+        start:
+          type: string
+          format: date-time
+        end:
+          type: string
+          format: date-time
+        coupons:
+          type: array
+          items:
+            type: integer
+          readOnly: true
+      required:
+        - organization
+        - name
+        - start
+        - end
+    Outlet:
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        organization:
+          type: integer
+        name:
+          type: string
+        address:
+          type: string
+          format: address
+        latitude:
+          type: number
+          format: float
+        longitude:
+          type: number
+          format: float
+        coupons:
+          type: array
+          items:
+            type: integer
+          readOnly: true
+    Coupon:
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        ctype:
+          type: object
+          $ref: '#/components/schemas/Type'
+        category:
+          type: integer
+        campaign:
+          type: integer
+        name:
+          type: string
+        description:
+          type: string
+        deal:
+          type: string
+        image:
+          type: string
+          format: binary
+        TC:
+          type: string
+        amount:
+          type: integer
+        code:
+          type: string
+        start:
+          type: string
+          format: date-time
+        end:
+          type: string
+          format: date-time
+        advertisement:
+          type: boolean
+          default: true
+        active:
+          type: boolean
+          default: true
+        published:
+          type: boolean
+          default: false
+        interests:
+          type: array
+          items:
+            type: object
+            $ref: '#/components/schemas/Interest'
+        outlets:
+          type: array
+          items:
+            type: object
+            $ref: '#/components/schemas/Outlet'
+      required:
+        - ctype
+        - category
+        - campaign
+        - name
+        - description
+        - deal
+        - image
+        - TC
+        - amount
+        - code
+        - start
+        - end
+        - interests
+        - outlets
+    Type:
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+        description:
+          type: string
+      required:
+        - name
+        - description
+    Category:
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+        description:
+          type: string
+      required:
+        - name
+        - description
+    Interest:
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+        description:
+          type: string
+      required:
+        - name
+        - description
+    Coupon2:
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        ctype:
+          $ref: '#/components/schemas/Type'
+        category:
+          $ref: '#/components/schemas/Category'
+        campaign:
+          type: integer
+        name:
+          type: string
+        description:
+          type: string
+        deal:
+          type: string
+        image:
+          type: string
+          format: binary
+        TC:
+          type: string
+        amount:
+          type: integer
+        code:
+          type: string
+        start:
+          type: string
+          format: date-time
+        end:
+          type: string
+          format: date-time
+        advertisement:
+          type: boolean
+          default: true
+        active:
+          type: boolean
+          default: true
+        published:
+          type: boolean
+          default: false
+        interests:
+          type: array
+          items:
+            $ref: '#/components/schemas/Interest'
+        outlets:
+          type: array
+          items:
+            type: integer

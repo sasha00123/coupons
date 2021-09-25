@@ -1,0 +1,39 @@
+<app-loading *ngIf="loading"></app-loading>
+<div class="row" *ngIf="!loading">
+  <div class="col-md-6 mx-auto">
+    <div class="card">
+      <div class="card-header">
+        <h3 class="mb-0">Login</h3>
+      </div>
+      <div class="card-body">
+        <form (submit)="loginUser()" #loginForm="ngForm">
+          <div class="form-group">
+            <div class="alert alert-danger" *ngIf="errors">
+              Wrong credentials! Please, try again!
+            </div>
+            <label for="email">Email</label>
+            <input type="email" [(ngModel)]="regData.email" class="form-control form-control-lg"
+                   id="email" required="required" name="email">
+          </div>
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" [(ngModel)]="regData.password" class="form-control form-control-lg"
+                   required="required" autocomplete="new-password" id="password" name="password">
+          </div>
+          <div class="col text-center">
+            <button [disabled]="loginForm.form.invalid" type="submit"
+                    class="btn btn-primary btn-lg"
+                    id="btnLogin">
+              Login
+            </button>
+          </div>
+        </form>
+        <div class="col text-center">
+          <a routerLink="/register">
+            Not a member yet? Register now!
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

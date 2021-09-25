@@ -1,0 +1,27 @@
+<app-loading *ngIf="loading"></app-loading>
+<div class="row" *ngIf="!loading">
+  <app-back></app-back>
+  <p routerLink="/"><span class="oi oi-home"></span> Home</p>
+  <div class="col-12 text-center dashboard-control">
+    <button class="btn btn-outline-primary" routerLink="/coupons/create" [disabled]="disabled">
+      CREATE COUPON
+    </button>
+  </div>
+  <table class="table">
+    <thead>
+    <tr>
+      <th>Name</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let coupon of coupons|filterCoupons:filter">
+      <th class="col-8">
+        {{coupon.name}}
+        <a routerLink="/coupons/edit/{{coupon.id}}"><span class="oi oi-pencil"></span></a>
+
+      </th>
+    </tr>
+    </tbody>
+  </table>
+  <p *ngIf="(coupons|filterCoupons:filter).length === 0">No coupons</p>
+</div>

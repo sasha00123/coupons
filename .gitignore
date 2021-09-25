@@ -1,7 +1,6 @@
 .idea
 venv
 __pycache__
-coupons/settings.py
 db.sqlite3
 node_modules
 *.swp

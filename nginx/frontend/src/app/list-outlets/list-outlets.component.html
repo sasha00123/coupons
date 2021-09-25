@@ -1,0 +1,26 @@
+<app-loading *ngIf="loading"></app-loading>
+<div class="row" *ngIf="!loading">
+  <app-back></app-back>
+  <p routerLink="/"><span class="oi oi-home"></span> Home</p>
+  <div class="col-12 text-center dashboard-control">
+    <button routerLink="/outlets/create" class="btn btn-success" [disabled]="disabled">
+      Add Shop
+    </button>
+  </div>
+  <table class="table">
+    <thead>
+    <tr>
+      <th>Name</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let outlet of vendor.outlets">
+      <th class="col-8">
+        {{ outlet.name }}
+        <a routerLink="/outlets/edit/{{ outlet.id }}"><span class="oi oi-pencil"></span></a>
+      </th>
+    </tr>
+    </tbody>
+  </table>
+  <p *ngIf="vendor.outlets.length === 0">No campaings</p>
+</div>

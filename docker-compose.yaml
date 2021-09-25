@@ -1,0 +1,34 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgis/postgis
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    env_file:
+      - .env
+  web:
+    build: .
+    command: sh entrypoint.sh
+    volumes:
+      - .:/src
+      - static_volume:/src/static
+      - media_volume:/src/media
+    depends_on:
+      - db
+    env_file:
+      - .env
+  nginx:
+    build: ./nginx
+    ports:
+      - 8000:80
+    depends_on:
+      - web
+    volumes:
+      - static_volume:/src/static
+      - media_volume:/src/media
+
+volumes:
+  postgres_data:
+  static_volume:
+  media_volume:

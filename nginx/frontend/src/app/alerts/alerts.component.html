@@ -1,0 +1,26 @@
+<div class="row" *ngIf="alertsLoaded">
+  <div class="col-12 alert alert-warning" role="alert" *ngIf="!vendor.verified">
+    <span class="oi oi-warning"></span> You email is not verified yet!
+  </div>
+  <div class="col-12 alert alert-warning" role="alert"
+       *ngIf="vendor.organization !== null && !vendor.organization.verified">
+    <span class="oi oi-warning"></span> You organization is not verified yet!
+  </div>
+  <div class="col-12 alert alert-danger" role="alert" *ngIf="vendor.restricted">
+    <span class="oi oi-warning"></span> Your account is blocked!
+  </div>
+  <div class="col-12" [ngSwitch]="created">
+    <div class="col-12 alert alert-success" role="alert" *ngSwitchCase="'organization'">
+      Organization has been created!
+    </div>
+    <div class="col-12 alert alert-success" role="alert" *ngSwitchCase="'outlet'">
+      Outlet has been created!
+    </div>
+    <div class="col-12 alert alert-success" role="alert" *ngSwitchCase="'coupon'">
+      Coupon has been created!
+    </div>
+    <div class="col-12 alert alert-success" role="alert" *ngSwitchCase="'campaign'">
+      Campaign has been created!
+    </div>
+  </div>
+</div>
