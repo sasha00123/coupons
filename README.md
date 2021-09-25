@@ -29,7 +29,10 @@ Coupon-sharing platform, where customers can find hot sales with coupons, while 
 ## Technologies
 
 - Python ❤ Django
-- Angular (TBA)
+- Django rest framework + JWT
+- Nginx, Gunicorn  
+- Postgres with Postgis extensions  
+- Angular
 
 ## Authors
 
@@ -43,8 +46,14 @@ Coupon-sharing platform, where customers can find hot sales with coupons, while 
 
 - [x] Email authentication + JWT authentication
 
-- [ ] API Coupon manipulations
+- [x] API Coupon manipulations
 
-- [ ] Angular dashboard
+- [x] Angular vendor dashboard
 
-- [ ] Landing page
+## Release checklist
+
+- [ ] Client (Telegram, Mobile or Web) for searching coupons
+
+## UML diagram
+
+![UML diagram](cat_models.png)
