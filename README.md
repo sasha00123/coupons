@@ -4,15 +4,28 @@
 
 ## What is this?
 
-Coupon-sharing platform, where customers can find hot sales with coupons, while vendors can share their coupons and monitors real time statistics of their campaigns.
+Coupon-sharing platform, where customers can find hot sales with coupons, while vendors can share their coupons and
+monitors real time statistics of their campaigns.
+
+## RUP arifacts
+
+RUP artifacts document can be accessed via [this link](https://docs.google.com/document/d/1gP8MP3MpDAbje775VQPVcoORg-JKeUrckKbF0LiK6bM/edit#)
 
 ## Glossary
 
 - **Vendor** - a person responsible for companies PR activities, able to create campaign
 - **Customer** - a user of a service searching for coupons
-- **Platform user** - Vendor or customer using the platform  
+- **Platform user** - Vendor or customer using the platform
 - **Campaign** - a series of coupons related by theme, dates, categories.
 - **Coupon** - a promocode user can activate to get a discount
+
+## Dynamic view
+
+![](dynamic-view.jpg) 
+
+## Static view
+
+![](static-view.jpg)
 
 ## Main features
 
@@ -30,8 +43,8 @@ Coupon-sharing platform, where customers can find hot sales with coupons, while 
 
 - Python ❤ Django
 - Django rest framework + JWT
-- Nginx, Gunicorn  
-- Postgres with Postgis extensions  
+- Nginx, Gunicorn
+- Postgres with Postgis extensions
 - Angular
 
 ## Authors
