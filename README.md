@@ -1,5 +1,7 @@
 # CAT - **C**oupons **A**dvertisement **T**able
 
+![](coverage.svg)
+![](pylint.svg)
 ----
 
 ## What is this?
@@ -66,6 +68,10 @@ RUP artifacts document can be accessed via [this link](https://docs.google.com/d
 ## Release checklist
 
 - [ ] Client (Telegram, Mobile or Web) for searching coupons
+
+## Coverage & linting
+
+More info on coverage inside `htmlcov`
 
 ## UML diagram
 
